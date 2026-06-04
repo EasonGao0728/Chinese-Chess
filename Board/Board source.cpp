@@ -4,6 +4,9 @@
 #include"Pawn.h"
 #include"Elephant.h"
 #include"Horse.h"
+#include"King.h"
+#include"Advisor.h"
+#
 Board::Board()
     : pieces{
         Rook({0,0},'r'),

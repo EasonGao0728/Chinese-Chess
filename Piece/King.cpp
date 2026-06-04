@@ -4,7 +4,7 @@
 using namespace std;
 
 King::King(pos position,bool a,char c,string str)
-:Chess(position,a,c,"General")
+:Chess(position,a,c,str)
 {};
 
 bool King::is_legal(pos start,pos end,const Board& chessBoard)const
