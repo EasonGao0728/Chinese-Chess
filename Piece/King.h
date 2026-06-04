@@ -1,5 +1,5 @@
 #include<iostream>
-#include"chess.h"
+#include"Chess.h"
 using namespace std;
 
 class King:public Chess {

@@ -1,12 +1,12 @@
 #include "Board.h"
-#include"Rook.h"
-#include"Cannon.h"
-#include"Pawn.h"
-#include"Elephant.h"
-#include"Horse.h"
-#include"King.h"
-#include"Advisor.h"
-#
+#include "../Piece/Rook.h"
+#include "../Piece/Cannon.h"
+#include "../Piece/Pawn.h"
+#include "../Piece/Elephant.h"
+#include "../Piece/horse.h"
+#include "../Piece/King.h"
+#include "../Piece/Advisor.h"
+
 Board::Board()
     : pieces{
         Rook({0,0},'r'),

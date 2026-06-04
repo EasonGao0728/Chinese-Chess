@@ -2,7 +2,7 @@
 #ifndef PAWN_H
 #define PAWN_H
 #include"Chess.h"
-#include"Board.h"
+#include"../Board/Board.h"
 class Pawn :public Chess {
 public:
 	Pawn(pos, char);

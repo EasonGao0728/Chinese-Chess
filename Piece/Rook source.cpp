@@ -1,5 +1,5 @@
 #include"Rook.h"
-#include"Board.h"
+#include"../Board/Board.h"
 #include<algorithm>
 Rook::Rook(pos position, char c) :Chess(position, true, c, "rook") {};
 bool Rook::is_legal(pos pos1, pos pos2, const Board& board)const {

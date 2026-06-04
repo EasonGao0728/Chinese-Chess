@@ -1,6 +1,6 @@
 #include<iostream>
 #include"King.h"
-#include"Board.h"
+#include"../Board/Board.h"
 using namespace std;
 
 King::King(pos position,bool a,char c,string str)

@@ -1,5 +1,5 @@
 #include"Pawn.h"
-#include"Board.h"
+#include"../Board/Board.h"
 #include<algorithm>
 Pawn::Pawn(pos position, char c) :Chess(position, true, c, "pawn") {};
 bool Pawn::is_legal(pos pos1, pos pos2, const Board& board)const {

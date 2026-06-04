@@ -1,5 +1,5 @@
-#include"Horse.h"
-#include"Board.h"
+#include"horse.h"
+#include"../Board/Board.h"
 #include<algorithm>
 Horse::Horse(pos position, char c) :Chess(position, true, c, "horse") {};
 bool Horse::is_legal(pos pos1, pos pos2, const Board& board)const {

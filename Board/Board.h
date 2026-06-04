@@ -1,7 +1,7 @@
 #pragma once
 #ifndef BOARD_H
 #define BOARD_H
-#include"Chess.h"
+#include"../Piece/Chess.h"
 class Board {
 public:
     Board();

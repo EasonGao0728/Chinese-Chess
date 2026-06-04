@@ -12,17 +12,19 @@ struct pos {
 class Chess {
 public:
     Chess(pos,bool,char,string);
+    Chess();
     void setalive(bool);
     bool getalive()const;
     char getside()const;
     void setpos(pos);
     pos getpos()const;
     string gettype()const;
+    const Chess& operator=(const Chess&);
 private:
     pos p;
     bool alive;
-    const char side;
-    const string type;
+    char side;
+    string type;
 
 };
 #endif

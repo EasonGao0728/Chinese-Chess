@@ -2,7 +2,7 @@
 #ifndef ADVISOR_H
 #define ADVISOR_H
 #include"Chess.h"
-#include"Board.h"
+#include"../Board/Board.h"
 class Advisor :public Chess {
 public:
 	Advisor(pos, char);
