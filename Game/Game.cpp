@@ -15,9 +15,17 @@ void Game::run()
 
 		pos start;
 		pos end;
-		if (!ConsoleUI::read_move(start, end)) {
+		bool undo_request = false;
+		if (!ConsoleUI::read_move(start, end, undo_request)) {
 			std::cout << "Game terminated." << std::endl;
 			return;
+		}
+
+		if (undo_request) {
+			if (!undo_last_move()) {
+				std::cout << "No move to undo." << std::endl;
+			}
+			continue;
 		}
 
 		if (!try_move(start, end)) {
@@ -35,8 +43,13 @@ bool Game::try_move(pos start, pos end)
 		return false;
 	}
 
+	board_history.push(board);
+	side_history.push(current_side);
+
 	Move move(start, end, board, step_count + 1);
 	if (!board.move_chess(start, end)) {
+		board_history.pop();
+		side_history.pop();
 		return false;
 	}
 
@@ -64,6 +77,27 @@ bool Game::try_move(pos start, pos end)
 	}
 
 	switch_side();
+	return true;
+}
+
+bool Game::undo_last_move()
+{
+	if (step_count == 0) {
+		return false;
+	}
+
+	board = board_history.pop();
+	current_side = side_history.pop();
+	game_over = false;
+	winner = '\0';
+
+	if (!history.empty()) {
+		history.pop_back();
+	}
+	if (step_count > 0) {
+		--step_count;
+	}
+
 	return true;
 }
 

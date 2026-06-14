@@ -5,6 +5,7 @@
 #include "../Board/Board.h"
 #include "../Move/Move.h"
 #include "../RuleChecker/RuleChecker.h"
+#include "../Stack/Stack.h"
 
 class Game {
 public:
@@ -12,6 +13,7 @@ public:
 
 	void run();
 	bool try_move(pos, pos);
+	bool undo_last_move();
 	const Board& get_board() const;
 	char get_current_side() const;
 	bool is_game_over() const;
@@ -20,6 +22,8 @@ public:
 
 private:
 	Board board;
+	Stack<Board> board_history;
+	Stack<char> side_history;
 	RuleChecker rule_checker;
 	std::vector<Move> history;
 	char current_side;

@@ -77,18 +77,32 @@ void ConsoleUI::print_board(const Board& board)
 	std::cout << std::endl;
 }
 
-bool ConsoleUI::read_move(pos& start, pos& end)
+bool ConsoleUI::read_move(pos& start, pos& end, bool& undo_request)
 {
 	initialize_console();
+	undo_request = false;
 	while (true) {
-		std::cout << "Input move as: x1 y1 x2 y2, or q to quit: ";
+		std::cout << "Input move as: x1 y1 x2 y2, u to undo, or q to quit: ";
 		std::string line;
 		if (!std::getline(std::cin, line)) {
 			return false;
 		}
 
+		size_t begin = line.find_first_not_of(" \t\r\n");
+		if (begin == std::string::npos) {
+			std::cout << "Invalid input format." << std::endl;
+			continue;
+		}
+		size_t end_pos = line.find_last_not_of(" \t\r\n");
+		line = line.substr(begin, end_pos - begin + 1);
+
 		if (line == "q" || line == "Q" || line == "quit" || line == "QUIT") {
 			return false;
+		}
+
+		if (line == "u" || line == "U" || line == "undo" || line == "UNDO") {
+			undo_request = true;
+			return true;
 		}
 
 		std::stringstream buffer(line);

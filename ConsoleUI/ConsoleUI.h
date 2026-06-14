@@ -7,7 +7,7 @@
 class ConsoleUI {
 public:
 	static void print_board(const Board&);
-	static bool read_move(pos&, pos&);
+	static bool read_move(pos&, pos&, bool& undo_request);
 	static void show_turn(char);
 	static void show_invalid_move();
 	static void show_check(char);
