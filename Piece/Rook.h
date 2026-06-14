@@ -2,6 +2,7 @@
 #ifndef ROOK_H
 #define ROOK_H
 #include"Chess.h"
+#include"../Board/Board.h"
 class Rook :public Chess {
 public:
 	Rook(pos, char);

@@ -32,5 +32,6 @@ const Chess& Chess::operator=(const Chess& A)//必要的赋值运算符重载
 	alive=A.alive;
 	side=A.side;
 	type=A.type;
+	return *this;
 }
 

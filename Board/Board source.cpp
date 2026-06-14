@@ -42,6 +42,9 @@ Board::Board()
         Pawn({6, 6}, 'b'),
         Pawn({8, 6}, 'b')
     }{}
+bool Board::is_inside(pos position)const {
+    return position.x >= 0 && position.x <= 8 && position.y >= 0 && position.y <= 9;
+}
 bool Board::is_exist(pos position)const {
     for(int i=0;i<32;i++){
         if(pieces[i].getalive()&&pieces[i].getpos().x==position.x&&pieces[i].getpos().y==position.y){
@@ -57,4 +60,48 @@ Chess Board::get_chess(pos position)const {
         }
     }
     return Chess({0,0},false,'x',"null");
+}
+bool Board::move_chess(pos start, pos end) {
+    if (!is_inside(start) || !is_inside(end) || (start.x == end.x && start.y == end.y)) {
+        return false;
+    }
+
+    int moving_index = -1;
+    int target_index = -1;
+    for (int i = 0; i < 32; ++i) {
+        if (!pieces[i].getalive()) {
+            continue;
+        }
+
+        if (pieces[i].getpos().x == start.x && pieces[i].getpos().y == start.y) {
+            moving_index = i;
+        }
+        if (pieces[i].getpos().x == end.x && pieces[i].getpos().y == end.y) {
+            target_index = i;
+        }
+    }
+
+    if (moving_index == -1) {
+        return false;
+    }
+    if (target_index != -1 && pieces[target_index].getside() == pieces[moving_index].getside()) {
+        return false;
+    }
+
+    if (target_index != -1) {
+        pieces[target_index].setalive(false);
+        pieces[target_index].setpos({-1, -1});
+    }
+
+    pieces[moving_index].setpos(end);
+    return true;
+}
+pos Board::find_king(char side)const {
+    for (int i = 0; i < 32; ++i) {
+        if (pieces[i].getalive() && pieces[i].getside() == side &&
+            (pieces[i].gettype() == "King" || pieces[i].gettype() == "king")) {
+            return pieces[i].getpos();
+        }
+    }
+    return {-1, -1};
 }

@@ -1,6 +1,7 @@
 #pragma once
 #ifndef CHESS_H
 #define CHESS_H
+#include<iostream>
 #include<string>
 using namespace std;
 struct pos {
@@ -17,6 +18,7 @@ class Chess {
 public:
     Chess(pos,bool,char,string);
     Chess();
+    Chess(const Chess&) = default;
     void setalive(bool);
     bool getalive()const;
     char getside()const;

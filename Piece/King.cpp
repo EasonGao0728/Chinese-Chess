@@ -3,7 +3,7 @@
 #include"../Board/Board.h"
 using namespace std;
 
-King::King(pos position,bool a,char c,string str)
+King::King(pos position,char c,bool a,string str)
 :Chess(position,a,c,str)
 {};
 
