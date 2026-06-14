@@ -37,4 +37,3 @@ bool Rook::is_legal(pos pos1, pos pos2, const Board& board)const {
 		}
 	}
 
-}

@@ -62,4 +62,18 @@ int Move::get_step()
 {
     return step_count;
 }
-//TO DO:void Move::print_move()
+void Move::print_move()
+{
+    cout<<"Move "<<step_count<<":"<<get_side()<<" side "<<get_acting_chess()->gettype()<<" ";
+    get_start().print_pos();
+    cout<<" to ";
+    get_end().print_pos();
+    if(get_check_eat()==1)
+    {
+        cout<<"Eat the chess: "<<get_eaten_chess()->getside()<<" side "<<get_eaten_chess()->gettype();
+    }
+    if(get_check_king()==1)
+    {
+        cout<<"Check King!"<<endl;
+    }
+}

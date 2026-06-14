@@ -7,6 +7,10 @@ struct pos {
     int x, y;
     pos(int a, int b) :x(a), y(b) {};
     pos() :x(0), y(0) {};
+    void print_pos()
+    {
+        cout<<" ("<<x<<","<<y<<") ";
+    }
     friend class Chess;
 };
 class Chess {
