@@ -7,5 +7,6 @@ class Elephant :public Chess {
 public:
 	Elephant(pos, char);
 	bool is_legal(pos, pos, const Board&)const;
+	Chess* clone()const override;
 };
 #endif

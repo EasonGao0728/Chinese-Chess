@@ -1,5 +1,0 @@
-GNU ld (Binutils for MinGW-W64 x86_64, built by Brecht Sanders, r2) 2.43.1
-Copyright (C) 2024 Free Software Foundation, Inc.
-This program is free software; you may redistribute it under the terms of
-the GNU General Public License version 3 or (at your option) a later version.
-This program has absolutely no warranty.

@@ -1,24 +1,27 @@
 #include "Move.h"
 #include "../RuleChecker/RuleChecker.h"
+#include <sstream>
 
 Move::Move(pos start_pos, pos end_pos, const Board& chessBoard, int step)
 {
     start=start_pos;
     end=end_pos;
     step_count=step;
-    acting_piece=chessBoard.get_chess(start);
-    char side_1=acting_piece.getside();
+    Chess* acting = chessBoard.get_chess(start);
+    acting_type = acting->gettype();
+    acting_side = acting->getside();
+    side = acting_side;
     check_eat=0;
     check_king=0;
-    side=side_1;
     if(chessBoard.is_exist(end))
     {
-      char side_2=chessBoard.get_chess(end).getside();
-      if(side_2!=side_1)
-    {
-        check_eat=1;
-        eaten_piece=chessBoard.get_chess(end);
-    }
+      Chess* target = chessBoard.get_chess(end);
+      if(target->getside()!=acting_side)
+      {
+          check_eat=1;
+          eaten_type = target->gettype();
+          eaten_side = target->getside();
+      }
     }
 
     Board next_board = chessBoard;
@@ -36,16 +39,21 @@ pos Move::get_end() const
 {
     return end;
 }
-const Chess* Move::get_acting_chess() const
+string Move::get_acting_type() const
 {
-    return &acting_piece;
+    return acting_type;
 }
-const Chess* Move::get_eaten_chess() const
+char Move::get_acting_side() const
 {
-    if (!check_eat) {
-        return nullptr;
-    }
-    return &eaten_piece;
+    return acting_side;
+}
+string Move::get_eaten_type() const
+{
+    return eaten_type;
+}
+char Move::get_eaten_side() const
+{
+    return eaten_side;
 }
 char Move::get_side() const
 {
@@ -65,17 +73,21 @@ int Move::get_step() const
 }
 void Move::print_move() const
 {
-    cout<<"Move "<<step_count<<":"<<get_side()<<" side "<<get_acting_chess()->gettype()<<" ";
-    get_start().print_pos();
-    cout<<" to ";
-    get_end().print_pos();
-    if(get_check_eat()==1)
-    {
-        cout<<" Eat the chess: "<<get_eaten_chess()->getside()<<" side "<<get_eaten_chess()->gettype();
+    cout << format_move();
+}
+
+std::string Move::format_move() const
+{
+    std::ostringstream oss;
+    oss << "Move " << step_count << ": " << get_side() << " side " << get_acting_type()
+        << " (" << get_start().x << "," << get_start().y << ")"
+        << " -> (" << get_end().x << "," << get_end().y << ")";
+    if (get_check_eat()) {
+        oss << "  [Eat: " << get_eaten_side() << " side " << get_eaten_type() << "]";
     }
-    if(get_check_king()==1)
-    {
-        cout<<" Check King!";
+    if (get_check_king()) {
+        oss << "  [Check!]";
     }
-    cout<<endl;
+    oss << "\n";
+    return oss.str();
 }

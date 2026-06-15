@@ -12,7 +12,7 @@ public:
 	Game();
 
 	void run();
-	bool try_move(pos, pos);
+	bool try_move(pos, pos, bool& caused_self_check, std::string& move_msg);
 	bool undo_last_move();
 	const Board& get_board() const;
 	char get_current_side() const;

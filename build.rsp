@@ -1,8 +1,8 @@
--B
-c:/Users/xiche/AppData/Local/Programs/WinLibsManual/mingw64/x86_64-w64-mingw32/bin/
 -std=c++17
+-static
 -Wall
 -Wextra
+-I Piece
 -o
 "ChineseChess.exe"
 "main.cpp"

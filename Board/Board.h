@@ -1,16 +1,19 @@
 #pragma once
 #ifndef BOARD_H
 #define BOARD_H
-#include"../Piece/Chess.h"
+#include"Chess.h"
 class Board {
 public:
-    Board();
-    bool is_inside(pos)const;
-    bool is_exist(pos)const;
-    Chess get_chess(pos)const;
-    bool move_chess(pos, pos);
-    pos find_king(char)const;
+	Board();
+	Board(const Board&);
+	~Board();
+	Board& operator=(const Board&);
+	bool is_exist(pos)const;
+	Chess* get_chess(pos)const;
+	bool move_chess(pos start, pos end);
+	pos find_king(char side)const;
+	bool is_inside(pos position)const;
 private:
-    Chess pieces[32];
+	Chess*pieces[32];
 };
 #endif

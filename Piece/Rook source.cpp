@@ -2,13 +2,14 @@
 #include"../Board/Board.h"
 #include<algorithm>
 Rook::Rook(pos position, char c) :Chess(position, true, c, "rook") {};
+Chess* Rook::clone()const { return new Rook(*this); }
 bool Rook::is_legal(pos pos1, pos pos2, const Board& board)const {
 	if(pos2.x<0||pos2.x>8||pos2.y<0||pos2.y>9){
 		return false;
 	}
-	char side1 = board.get_chess(pos1).getside();
+	char side1 = board.get_chess(pos1)->getside();
 	if (board.is_exist(pos2)) {
-	char side2 = board.get_chess(pos2).getside();
+	char side2 = board.get_chess(pos2)->getside();
 	if(side1==side2){
 		return false;
 	}
@@ -36,4 +37,3 @@ bool Rook::is_legal(pos pos1, pos pos2, const Board& board)const {
 			return false;
 		}
 	}
-

@@ -54,12 +54,27 @@ void ConsoleUI::initialize_console()
 	initialized = true;
 }
 
+void ConsoleUI::clear_screen()
+{
+#ifdef _WIN32
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	COORD topLeft = {0, 0};
+	DWORD length, written;
+	GetConsoleScreenBufferInfo(hOut, &csbi);
+	length = csbi.dwSize.X * csbi.dwSize.Y;
+	FillConsoleOutputCharacterA(hOut, ' ', length, topLeft, &written);
+	FillConsoleOutputAttribute(hOut, csbi.wAttributes, length, topLeft, &written);
+	SetConsoleCursorPosition(hOut, topLeft);
+#else
+	std::cout << "\x1b[2J\x1b[H";
+#endif
+}
+
 void ConsoleUI::print_board(const Board& board)
 {
 	initialize_console();
 	std::cout << std::endl;
-	std::cout << "    0 1 2 3 4 5 6 7 8" << std::endl;
-	std::cout << "   -------------------" << std::endl;
 	for (int y = 9; y >= 0; --y) {
 		std::cout << y << " | ";
 		for (int x = 0; x <= 8; ++x) {
@@ -73,6 +88,18 @@ void ConsoleUI::print_board(const Board& board)
 			}
 		}
 		std::cout << std::endl;
+	}
+	// x-axis labels below the board, aligned with each column.
+	// Each cell is one Chinese character (2 display cols) + 1 space = 3 cols wide,
+	// except the last cell which has no trailing space.
+	// The row prefix "y | " is 4 chars wide (e.g. "9 | ").
+	std::cout << "   ---------------------------" << std::endl;
+	std::cout << "    ";
+	for (int x = 0; x <= 8; ++x) {
+		std::cout << x;
+		if (x != 8) {
+			std::cout << "  "; // 2 spaces to match the 3-col cell width after a 1-digit number
+		}
 	}
 	std::cout << std::endl;
 }
@@ -120,6 +147,11 @@ void ConsoleUI::show_turn(char side)
 	std::cout << get_side_name(side) << " to move." << std::endl;
 }
 
+void ConsoleUI::show_self_check_warning()
+{
+	std::cout << "That move would leave your own king in check." << std::endl;
+}
+
 void ConsoleUI::show_invalid_move()
 {
 	std::cout << "Illegal move. Try again." << std::endl;
@@ -150,10 +182,10 @@ void ConsoleUI::show_winner(char side)
 	std::cout << "Winner: " << get_side_name(side) << std::endl;
 }
 
-std::string ConsoleUI::get_piece_symbol(const Chess& piece)
+std::string ConsoleUI::get_piece_symbol(const Chess* piece)
 {
 	std::string symbol = "?";
-	std::string type = piece.gettype();
+	std::string type = piece->gettype();
 
 	if (type == "rook") {
 		symbol = "车";
@@ -171,7 +203,7 @@ std::string ConsoleUI::get_piece_symbol(const Chess& piece)
 		symbol = "兵";
 	}
 
-	if (piece.getside() == 'r') {
+	if (piece->getside() == 'r') {
 		if (type == "elephant") {
 			symbol = "相";
 		} else if (type == "advisor") {
@@ -181,7 +213,7 @@ std::string ConsoleUI::get_piece_symbol(const Chess& piece)
 		}
 	}
 
-	if (piece.getside() != 'r' && type == "pawn") {
+	if (piece->getside() != 'r' && type == "pawn") {
 		symbol = "卒";
 	}
 
@@ -189,7 +221,7 @@ std::string ConsoleUI::get_piece_symbol(const Chess& piece)
 		return symbol;
 	}
 
-	if (piece.getside() == 'r') {
+	if (piece->getside() == 'r') {
 		return std::string(kRedColor) + symbol + kResetColor;
 	}
 

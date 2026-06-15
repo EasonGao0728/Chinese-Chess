@@ -16,8 +16,8 @@ public:
 	bool is_stalemate(const Board&, char)const;
 
 private:
-	bool is_piece_move_legal(const Chess&, pos, pos, const Board&)const;
-	bool can_piece_attack(const Chess&, pos, pos, const Board&)const;
+	bool is_piece_move_legal(const Chess*, pos, pos, const Board&)const;
+	bool can_piece_attack(const Chess*, pos, pos, const Board&)const;
 	bool is_in_palace(char, pos)const;
 	int count_pieces_between(const Board&, pos, pos)const;
 };

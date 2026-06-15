@@ -7,5 +7,6 @@ class Rook :public Chess {
 public:
 	Rook(pos, char);
 	bool is_legal(pos, pos, const Board&)const;
+	Chess* clone()const override;
 };
 #endif

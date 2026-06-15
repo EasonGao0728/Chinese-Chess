@@ -1,8 +1,9 @@
 #include"Elephant.h"
 #include<algorithm>
 Elephant::Elephant(pos position, char c) :Chess(position, true, c, "elephant") {};
+Chess* Elephant::clone()const { return new Elephant(*this); }
 bool Elephant::is_legal(pos pos1, pos pos2, const Board& board)const {
-	char side1 = board.get_chess(pos1).getside();
+	char side1 = board.get_chess(pos1)->getside();
 	if(side1=='r'&&pos2.y>4){
 		return false;
 	}
@@ -10,7 +11,7 @@ bool Elephant::is_legal(pos pos1, pos pos2, const Board& board)const {
 		return false;
 	}
 	if (board.is_exist(pos2)) {
-		char side2 = board.get_chess(pos2).getside();
+		char side2 = board.get_chess(pos2)->getside();
 		if (side1 == side2) {
 			return false;
 		}

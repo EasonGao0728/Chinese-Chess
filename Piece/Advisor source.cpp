@@ -1,8 +1,9 @@
 #include"Advisor.h"
 #include<algorithm>
 Advisor::Advisor(pos position, char c) :Chess(position, true, c, "advisor") {};
+Chess* Advisor::clone()const { return new Advisor(*this); }
 bool Advisor::is_legal(pos pos1, pos pos2, const Board& board)const {
-	char side1 = board.get_chess(pos1).getside();
+	char side1 = board.get_chess(pos1)->getside();
 	if(side1=='r'&&(pos2.x<3||pos2.x>5||pos2.y>2||pos2.y<0)){
 		return false;
 	}
@@ -10,7 +11,7 @@ bool Advisor::is_legal(pos pos1, pos pos2, const Board& board)const {
 		return false;
 	}
 	if(board.is_exist(pos2)){
-		char side2 = board.get_chess(pos2).getside();
+		char side2 = board.get_chess(pos2)->getside();
 		if (side1 == side2) {
 			return false;
 		}

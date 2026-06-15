@@ -7,5 +7,6 @@ class Advisor :public Chess {
 public:
 	Advisor(pos, char);
 	bool is_legal(pos, pos, const Board&)const;
+	Chess* clone()const override;
 };
 #endif

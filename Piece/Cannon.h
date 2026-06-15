@@ -7,5 +7,6 @@ class Cannon :public Chess {
 public:
 	Cannon(pos, char);
 	bool is_legal(pos, pos, const Board&)const;
+	Chess* clone()const override;
 };
 #endif

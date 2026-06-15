@@ -9,7 +9,19 @@ Game::Game()
 
 void Game::run()
 {
+	// Pending messages to show at the top of the next screen (move log, errors, etc.)
+	// We collect them as a string so clear_screen() can be called first, then we print them.
+	std::string pending_message;
+
 	while (!game_over) {
+		ConsoleUI::clear_screen();
+
+		// Show any result from the previous action (move log, error, undo confirmation)
+		if (!pending_message.empty()) {
+			std::cout << pending_message;
+			pending_message.clear();
+		}
+
 		ConsoleUI::print_board(board);
 		ConsoleUI::show_turn(current_side);
 
@@ -23,23 +35,47 @@ void Game::run()
 
 		if (undo_request) {
 			if (!undo_last_move()) {
-				std::cout << "No move to undo." << std::endl;
+				pending_message = "No move to undo.\n";
+			} else {
+				pending_message = "Last move undone.\n";
 			}
 			continue;
 		}
 
-		if (!try_move(start, end)) {
-			ConsoleUI::show_invalid_move();
+		bool caused_self_check = false;
+		std::string move_msg;
+		if (!try_move(start, end, caused_self_check, move_msg)) {
+			if (caused_self_check) {
+				pending_message = "That move would leave your own king in check.\nIllegal move. Try again.\n";
+			} else {
+				pending_message = "Illegal move. Try again.\n";
+			}
+		} else {
+			pending_message = move_msg;
 		}
 	}
 
+	// Game over: show final board and result
+	ConsoleUI::clear_screen();
 	ConsoleUI::print_board(board);
 	ConsoleUI::show_winner(winner);
 }
 
-bool Game::try_move(pos start, pos end)
+static const char* side_name(char s) { return s == 'r' ? "Red side" : "Blue side"; }
+
+bool Game::try_move(pos start, pos end, bool& caused_self_check, std::string& move_msg)
 {
+	caused_self_check = false;
+	move_msg.clear();
+
 	if (!rule_checker.is_move_legal(board, start, end, current_side)) {
+		if (board.is_inside(start) && board.is_inside(end) &&
+		    board.is_exist(start) &&
+		    board.get_chess(start)->getside() == current_side &&
+		    (start.x != end.x || start.y != end.y))
+		{
+			caused_self_check = rule_checker.would_cause_self_check(board, start, end);
+		}
 		return false;
 	}
 
@@ -55,24 +91,24 @@ bool Game::try_move(pos start, pos end)
 
 	history.push_back(move);
 	++step_count;
-	history.back().print_move();
+	move_msg = history.back().format_move();
 
 	char opponent = current_side == 'r' ? 'b' : 'r';
 	if (history.back().get_check_king()) {
-		ConsoleUI::show_check(opponent);
+		move_msg += std::string(side_name(opponent)) + " is in check.\n";
 	}
 
 	if (rule_checker.is_checkmate(board, opponent)) {
 		game_over = true;
 		winner = current_side;
-		ConsoleUI::show_checkmate(winner);
+		move_msg += std::string(side_name(winner)) + " wins by checkmate.\n";
 		return true;
 	}
 
 	if (rule_checker.is_stalemate(board, opponent)) {
 		game_over = true;
 		winner = current_side;
-		ConsoleUI::show_stalemate(winner);
+		move_msg += std::string(side_name(winner)) + " wins by stalemate.\n";
 		return true;
 	}
 

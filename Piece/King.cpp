@@ -6,6 +6,7 @@ using namespace std;
 King::King(pos position,char c,bool a,string str)
 :Chess(position,a,c,str)
 {};
+Chess* King::clone()const { return new King(*this); }
 
 bool King::is_legal(pos start,pos end,const Board& chessBoard)const
 {
@@ -30,7 +31,7 @@ bool King::is_legal(pos start,pos end,const Board& chessBoard)const
     }
     if(chessBoard.is_exist(end)==1)//判断是否遇到敌方棋子
         {
-            if(chessBoard.get_chess(end).getside()!=Chess::getside())
+            if(chessBoard.get_chess(end)->getside()!=Chess::getside())
             {
                 check_legal_a=true;
             }
@@ -50,7 +51,7 @@ bool King::is_legal(pos start,pos end,const Board& chessBoard)const
             pos temp(end.x,i);
             if(chessBoard.is_exist(temp))
             {
-                if(chessBoard.get_chess(temp).gettype()=="King")
+                if(chessBoard.get_chess(temp)->gettype()=="King")
                 {
                     is_direct=1;
                 }
@@ -68,7 +69,7 @@ bool King::is_legal(pos start,pos end,const Board& chessBoard)const
             pos temp(end.x,i);
             if(chessBoard.is_exist(temp))
             {
-                if(chessBoard.get_chess(temp).gettype()=="King")
+                if(chessBoard.get_chess(temp)->gettype()=="King")
                 {
                     is_direct=1;
                 }

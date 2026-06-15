@@ -1,14 +1,15 @@
 #include"Cannon.h"
 #include<algorithm>
 Cannon::Cannon(pos position, char c) :Chess(position, true, c, "cannon") {};
+Chess* Cannon::clone()const { return new Cannon(*this); }
 bool Cannon::is_legal(pos pos1, pos pos2, const Board& board)const {
 	if (pos2.x < 0 || pos2.x>8 || pos2.y < 0 || pos2.y>9) {
 		return false;
 	}
 	bool i = board.is_exist(pos2);
 	if (i) {
-		char side1 = board.get_chess(pos1).getside();
-		char side2 = board.get_chess(pos2).getside();
+		char side1 = board.get_chess(pos1)->getside();
+		char side2 = board.get_chess(pos2)->getside();
 		if(side1==side2){
 			return false;
 		}
