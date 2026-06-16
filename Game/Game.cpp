@@ -9,20 +9,19 @@ Game::Game()
 
 void Game::run()
 {
-	// Pending messages to show at the top of the next screen (move log, errors, etc.)
-	// We collect them as a string so clear_screen() can be called first, then we print them.
+	//缓存上一步的日志
 	std::string pending_message;
 
 	while (!game_over) {
 		ConsoleUI::clear_screen();
 
-		// Show any result from the previous action (move log, error, undo confirmation)
+		// 输出上一步的日志
 		if (!pending_message.empty()) {
 			std::cout << pending_message;
 			pending_message.clear();
 		}
 
-		ConsoleUI::print_board(board);
+		ConsoleUI::print_board(board);//输出棋盘
 		ConsoleUI::show_turn(current_side);
 
 		pos start;
@@ -45,7 +44,7 @@ void Game::run()
 		bool caused_self_check = false;
 		std::string move_msg;
 		if (!try_move(start, end, caused_self_check, move_msg)) {
-			if (caused_self_check) {
+			if (caused_self_check) {//评价为User Friendly
 				pending_message = "That move would leave your own king in check.\nIllegal move. Try again.\n";
 			} else {
 				pending_message = "Illegal move. Try again.\n";
@@ -79,10 +78,11 @@ bool Game::try_move(pos start, pos end, bool& caused_self_check, std::string& mo
 		return false;
 	}
 
+	//把当前棋盘状态压入stack
 	board_history.push(board);
 	side_history.push(current_side);
 
-	Move move(start, end, board, step_count + 1);
+	Move move(start, end, board, step_count + 1);//模拟走一步
 	if (!board.move_chess(start, end)) {
 		board_history.pop();
 		side_history.pop();
@@ -116,12 +116,12 @@ bool Game::try_move(pos start, pos end, bool& caused_self_check, std::string& mo
 	return true;
 }
 
-bool Game::undo_last_move()
+bool Game::undo_last_move()//悔棋功能
 {
 	if (step_count == 0) {
 		return false;
 	}
-
+	//从stack里pop出上一步完成后的棋盘状态
 	board = board_history.pop();
 	current_side = side_history.pop();
 	game_over = false;
