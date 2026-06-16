@@ -6,19 +6,19 @@
 using namespace std;
 
 bool RuleChecker::is_move_legal(const Board& board, pos start, pos end, char current_side)const
-{
-	if (!board.is_inside(start) || !board.is_inside(end)) {
+{//全局意义上的move合法性判断，不涉及到具体棋子走法的实现
+	if (!board.is_inside(start) || !board.is_inside(end)) {//终点在棋盘内
 		return false;
 	}
-	if (start.x == end.x && start.y == end.y) {
+	if (start.x == end.x && start.y == end.y) {//起终点不能重合
 		return false;
 	}
-	if (!board.is_exist(start)) {
+	if (!board.is_exist(start)) {//起点非空
 		return false;
 	}
 
 	Chess* moving_piece = board.get_chess(start);
-	if (current_side != '\0' && moving_piece->getside() != current_side) {
+	if (current_side != '\0' && moving_piece->getside() != current_side) {//起点棋子要是己方
 		return false;
 	}
 	if (!is_piece_move_legal(moving_piece, start, end, board)) {
@@ -29,17 +29,17 @@ bool RuleChecker::is_move_legal(const Board& board, pos start, pos end, char cur
 	if (!next_board.move_chess(start, end)) {
 		return false;
 	}
-	if (are_kings_facing(next_board)) {
+	if (are_kings_facing(next_board)) {//模拟走一次后，判断是否照将
 		return false;
 	}
-	if (is_in_check(next_board, moving_piece->getside())) {
+	if (is_in_check(next_board, moving_piece->getside())) {//模拟走一次后，判断是否被将军
 		return false;
 	}
 	return true;
 }
 
 bool RuleChecker::is_in_check(const Board& board, char side)const
-{
+{//被将军判断
 	pos king_pos = board.find_king(side);
 	if (!board.is_inside(king_pos)) {
 		return false;
@@ -72,7 +72,7 @@ bool RuleChecker::would_cause_self_check(const Board& board, pos start, pos end)
 
 	Chess* moving_piece = board.get_chess(start);
 	Board next_board = board;
-	if (!next_board.move_chess(start, end)) {
+	if (!next_board.move_chess(start, end)) {//模拟走一步
 		return true;
 	}
 	return are_kings_facing(next_board) || is_in_check(next_board, moving_piece->getside());
@@ -129,91 +129,12 @@ bool RuleChecker::is_stalemate(const Board& board, char side)const
 
 bool RuleChecker::is_piece_move_legal(const Chess* piece, pos start, pos end, const Board& board)const
 {
-	if (!board.is_inside(end)) {
-		return false;
-	}
-	if (board.is_exist(end) && board.get_chess(end)->getside() == piece->getside()) {
-		return false;
-	}
-
-	string type = piece->gettype();
-	int dx = end.x - start.x;
-	int dy = end.y - start.y;
-	int abs_dx = abs(dx);
-	int abs_dy = abs(dy);
-
-	if (type == "rook") {
-		return (start.x == end.x || start.y == end.y) && count_pieces_between(board, start, end) == 0;
-	}
-
-	if (type == "cannon") {
-		if (start.x != end.x && start.y != end.y) {
-			return false;
-		}
-		int pieces_between = count_pieces_between(board, start, end);
-		if (board.is_exist(end)) {
-			return pieces_between == 1;
-		}
-		return pieces_between == 0;
-	}
-
-	if (type == "horse") {
-		if (abs_dx == 2 && abs_dy == 1) {
-			return !board.is_exist({start.x + dx / 2, start.y});
-		}
-		if (abs_dx == 1 && abs_dy == 2) {
-			return !board.is_exist({start.x, start.y + dy / 2});
-		}
-		return false;
-	}
-
-	if (type == "elephant") {
-		if (abs_dx != 2 || abs_dy != 2) {
-			return false;
-		}
-		if (piece->getside() == 'r' && end.y > 4) {
-			return false;
-		}
-		if (piece->getside() == 'b' && end.y < 5) {
-			return false;
-		}
-		return !board.is_exist({start.x + dx / 2, start.y + dy / 2});
-	}
-
-	if (type == "advisor") {
-		return abs_dx == 1 && abs_dy == 1 && is_in_palace(piece->getside(), end);
-	}
-
-	if (type == "King" || type == "king") {
-		if (board.is_exist(end)) {
-			Chess* target_piece = board.get_chess(end);
-			if ((target_piece->gettype() == "King" || target_piece->gettype() == "king") &&
-				target_piece->getside() != piece->getside() && start.x == end.x) {
-				return count_pieces_between(board, start, end) == 0;
-			}
-		}
-		return is_in_palace(piece->getside(), end) && ((abs_dx == 1 && abs_dy == 0) || (abs_dx == 0 && abs_dy == 1));
-	}
-
-	if (type == "pawn") {
-		if (piece->getside() == 'r') {
-			if (dx == 0 && dy == 1) {
-				return true;
-			}
-			return start.y >= 5 && dy == 0 && abs_dx == 1;
-		}
-		if (dx == 0 && dy == -1) {
-			return true;
-		}
-		return start.y <= 4 && dy == 0 && abs_dx == 1;
-	}
-
-	return false;
+	return piece->is_legal(start, end, board);
 }
 
 bool RuleChecker::can_piece_attack(const Chess* piece, pos start, pos end, const Board& board)const
 {
-	return is_piece_move_legal(piece, start, end, board);
+	return piece->is_legal(start, end, board);
 }
 
 bool RuleChecker::is_in_palace(char side, pos position)const

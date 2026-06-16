@@ -80,5 +80,5 @@ bool King::is_legal(pos start,pos end,const Board& chessBoard)const
             }
         }
     }
-    return check_legal_a&&check_legal_b&&is_direct;
+    return check_legal_a&&check_legal_b&&!is_direct;
 }

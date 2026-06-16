@@ -5,7 +5,6 @@
 #include<string>
 using namespace std;
 
-// Forward declaration to break circular dependency with Board.h
 class Board;
 
 struct pos {

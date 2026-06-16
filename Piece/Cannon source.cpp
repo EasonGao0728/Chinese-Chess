@@ -13,23 +13,25 @@ bool Cannon::is_legal(pos pos1, pos pos2, const Board& board)const {
 		if(side1==side2){
 			return false;
 		}
-		if (pos1.x == pos2.x && pos1.y != pos2.y) {
-			for (int i = std::min(pos1.y, pos2.y);i < max(pos1.y, pos2.y);++i)
+		if (pos1.x == pos2.x && pos1.y != pos2.y) {//吃子必须中间当且仅有一个棋子
+			int count = 0;
+			for (int i = std::min(pos1.y, pos2.y) + 1; i < max(pos1.y, pos2.y); ++i)
 			{
 				if (board.is_exist({ pos1.x,i })) {
-					return true;
+					++count;
 				}
 			}
-			return false;
+			return count == 1;
 		}
 		else if (pos1.x != pos2.x && pos1.y == pos2.y) {
-			for (int i = std::min(pos1.x, pos2.x);i < max(pos1.x, pos2.x);++i)
+			int count = 0;
+			for (int i = std::min(pos1.x, pos2.x) + 1; i < max(pos1.x, pos2.x); ++i)
 			{
 				if (board.is_exist({ i,pos1.y })) {
-					return true;
+					++count;
 				}
 			}
-			return false;
+			return count == 1;
 		}
 		else {
 			return false;
@@ -37,7 +39,7 @@ bool Cannon::is_legal(pos pos1, pos pos2, const Board& board)const {
 	}
 	else {
 		if (pos1.x == pos2.x && pos1.y != pos2.y) {
-			for (int i = std::min(pos1.y, pos2.y);i < max(pos1.y, pos2.y);++i)
+			for (int i = std::min(pos1.y, pos2.y) + 1; i < max(pos1.y, pos2.y); ++i)
 			{
 				if (board.is_exist({ pos1.x,i })) {
 					return false;
@@ -46,7 +48,7 @@ bool Cannon::is_legal(pos pos1, pos pos2, const Board& board)const {
 			return true;
 		}
 		else if (pos1.x != pos2.x && pos1.y == pos2.y) {
-			for (int i = std::min(pos1.x, pos2.x);i < max(pos1.x, pos2.x);++i)
+			for (int i = std::min(pos1.x, pos2.x) + 1; i < max(pos1.x, pos2.x); ++i)
 			{
 				if (board.is_exist({ i,pos1.y })) {
 					return false;

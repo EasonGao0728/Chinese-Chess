@@ -15,7 +15,7 @@ bool Horse::is_legal(pos pos1, pos pos2, const Board& board)const {
 		}
 	}
 	if (abs(pos1.x - pos2.x) == 2 && abs(pos1.y - pos2.y) == 1) {
-		if(board.is_exist({(pos1.x + pos2.x) / 2,pos1.y})){
+		if(board.is_exist({(pos1.x + pos2.x) / 2,pos1.y})){//蹩马腿判断
 			return false;
 		}
 		else{

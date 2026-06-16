@@ -78,7 +78,7 @@ Chess* Board::get_chess(pos position) const {
     }
     return nullptr;
 }
-bool Board::move_chess(pos start, pos end) {
+bool Board::move_chess(pos start, pos end) {//宏观的move合法性判断，不涉及具体的棋子走法判断
     if (!is_inside(start) || !is_inside(end) || (start.x == end.x && start.y == end.y)) {
         return false;
     }
@@ -89,18 +89,19 @@ bool Board::move_chess(pos start, pos end) {
         if (!pieces[i]->getalive()) {
             continue;
         }
-
+        //防止终点与起点重合
         if (pieces[i]->getpos().x == start.x && pieces[i]->getpos().y == start.y) {
             moving_index = i;
         }
+        //吃子判断
         if (pieces[i]->getpos().x == end.x && pieces[i]->getpos().y == end.y) {
             target_index = i;
         }
     }
-
     if (moving_index == -1) {
         return false;
     }
+    //防止吃己方棋子
     if (target_index != -1 && pieces[target_index]->getside() == pieces[moving_index]->getside()) {
         return false;
     }

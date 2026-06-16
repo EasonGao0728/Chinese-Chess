@@ -15,11 +15,12 @@ bool Pawn::is_legal(pos pos1, pos pos2, const Board& board)const {
 		}
 	}
 	if (side1 == 'r') {
-		if (pos1.y >= 4) {
-			if (pos2.x == pos1.x && pos2.y == pos1.y + 1) {
+		// 红方从 y=0 出发向上走，过河线是 y>=5（进入黑方阵地）
+		if (pos1.y >= 5) {
+			if (pos2.x == pos1.x && pos2.y == pos1.y + 1) {//只能前进
 				return true;
 			}
-			else if (pos2.y == pos1.y && abs(pos2.x - pos1.x) == 1) {
+			else if (pos2.y == pos1.y && abs(pos2.x - pos1.x) == 1) {//过河以后可以左右移动
 				return true;
 			}
 			else {
@@ -30,14 +31,15 @@ bool Pawn::is_legal(pos pos1, pos pos2, const Board& board)const {
 			if (pos2.x == pos1.x && pos2.y == pos1.y + 1) {
 				return true;
 			}
-			else {
+			else {//没过河无法左右移动
 				return false;
 			}
 		}
 	}
 	else {
-		if (pos1.y <4) {
-			if (pos2.x == pos1.x && pos2.y == pos1.y + 1) {
+		// 黑方从 y=9 出发向下走，过河线是 y<=4（进入红方阵地）
+		if (pos1.y <= 4) {
+			if (pos2.x == pos1.x && pos2.y == pos1.y - 1) {//只能前进（向下）
 				return true;
 			}
 			else if (pos2.y == pos1.y && abs(pos2.x - pos1.x) == 1) {
@@ -48,7 +50,7 @@ bool Pawn::is_legal(pos pos1, pos pos2, const Board& board)const {
 			}
 		}
 		else {
-			if (pos2.x == pos1.x && pos2.y == pos1.y + 1) {
+			if (pos2.x == pos1.x && pos2.y == pos1.y - 1) {//向下前进
 				return true;
 			}
 			else {
