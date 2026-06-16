@@ -4,7 +4,7 @@ Advisor::Advisor(pos position, char c) :Chess(position, true, c, "advisor") {};
 Chess* Advisor::clone()const { return new Advisor(*this); }
 bool Advisor::is_legal(pos pos1, pos pos2, const Board& board)const {
 	char side1 = board.get_chess(pos1)->getside();
-	if(side1=='r'&&(pos2.x<3||pos2.x>5||pos2.y>2||pos2.y<0)){
+	if(side1=='r'&&(pos2.x<3||pos2.x>5||pos2.y>2||pos2.y<0)){//只能在田字格里面走
 		return false;
 	}
 	if (side1 == 'b' && (pos2.x < 3 || pos2.x>5 || pos2.y < 7 || pos2.y>9)) {
